@@ -27,6 +27,11 @@ Route::get('/sign-in-google', [UserController::class, 'google'])->name('user.log
 //email google dipilih utnuk sign in akan mengarah ke route ini :
 Route::get('/auth/google/callback', [UserController::class, 'handleProvideCallback'])->name('user.google.callback');
 
+// midtrans routes
+Route::get('payment/success', [CheckoutController::class, 'midtransCallback']);
+Route::post('payment/success', [CheckoutController::class, 'midtransCallback']);
+
+
 Route::middleware(['auth'])->group(function () {
     // checkout route
     Route::get('/success-checkout', [CheckoutController::class, 'success'])->name('checkout.success')->middleware('ensureUserRole:user');
