@@ -4,8 +4,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\User\DashboardController as UserDashboardController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\User\DashboardController as UserDashboard;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\CheckoutController as AdminCheckout;
 /*
 |--------------------------------------------------------------------------
@@ -40,11 +40,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     Route::prefix('user/dashboard')->namespace('User')->name('user.')->middleware('ensureUserRole:user')->group(function () {
-        Route::get('/', [UserDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/', [UserDashboard::class, 'index'])->name('dashboard');
     });
 
     Route::prefix('admin/dashboard')->namespace('User')->name('admin.')->middleware('ensureUserRole:admin')->group(function () {
-        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/', [AdminDashboard::class, 'index'])->name('dashboard');
         Route::post('/checkout/{checkout}', [AdminCheckout::class, 'update'])->name('checkout.update');
     });
 });
