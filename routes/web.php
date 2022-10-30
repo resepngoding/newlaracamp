@@ -4,7 +4,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\User\DashboardController as UserDashboardController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\CheckoutController as AdminCheckout;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,11 +29,19 @@ Route::get('/auth/google/callback', [UserController::class, 'handleProvideCallba
 
 Route::middleware(['auth'])->group(function () {
     // checkout route
-    Route::get('/success-checkout', [CheckoutController::class, 'success'])->name('checkout.success');
-    Route::get('/checkout/{camp:slug}', [CheckoutController::class, 'create'])->name('checkout.create');
-    Route::post('/checkout/{camp}', [CheckoutController::class, 'store'])->name('checkout.store');
-    //user dashboard
+    Route::get('/success-checkout', [CheckoutController::class, 'success'])->name('checkout.success')->middleware('ensureUserRole:user');
+    Route::get('/checkout/{camp:slug}', [CheckoutController::class, 'create'])->name('checkout.create')->middleware('ensureUserRole:user');
+    Route::post('/checkout/{camp}', [CheckoutController::class, 'store'])->name('checkout.store')->middleware('ensureUserRole:user');
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+
+    Route::prefix('user/dashboard')->namespace('User')->name('user.')->middleware('ensureUserRole:user')->group(function () {
+        Route::get('/', [UserDashboardController::class, 'index'])->name('dashboard');
+    });
+
+    Route::prefix('admin/dashboard')->namespace('User')->name('admin.')->middleware('ensureUserRole:admin')->group(function () {
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::post('/checkout/{checkout}', [AdminCheckout::class, 'update'])->name('checkout.update');
+    });
 });
 
 require __DIR__ . '/auth.php';
