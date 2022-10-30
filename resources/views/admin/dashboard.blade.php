@@ -28,13 +28,7 @@
                                         <td>{{$checkout->Camp->title}}</td>
                                         <td>{{$checkout->Camp->price}}k</td>
                                         <td>{{$checkout->created_at->format('M d Y')}}</td>
-                                        <td>
-                                            @if ($checkout->is_paid)
-                                                <span class="badge bg-success">Paid</span>
-                                            @else
-                                                <span class="badge bg-danger">Waiting</span>
-                                            @endif
-                                        </td>
+                                        <td>{{$checkout->payment_status}}</td>
                                         <td>
                                             @if(!$checkout->is_paid)
                                             <form action="{{ route('admin.checkout.update', $checkout->id) }}" method="POST">
